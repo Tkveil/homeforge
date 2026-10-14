@@ -9,7 +9,7 @@ const CONTACTS = [
   { id: 5, name: 'Linda Williams', type: 'buyer', stage: 'In Escrow', phone: '(512) 555-9982', email: 'l.williams@gmail.com', address: '55 Birch Ct', agent: 'Sarah Mills', notes: 'Relocation from Chicago. Kids start school Jan 1.', bgCheck: true },
 ];
 
-export default function ContactsView({ user }) {
+export default function ContactsView({ user, isMobile }) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState('all');
@@ -68,7 +68,7 @@ export default function ContactsView({ user }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: contact ? '1fr 360px' : '1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (contact ? '1fr 360px' : '1fr'), gap: '20px' }}>
         {/* Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '14px', alignContent: 'start' }}>
           {filtered.map(c => (

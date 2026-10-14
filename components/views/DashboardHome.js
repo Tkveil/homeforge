@@ -24,7 +24,7 @@ const STATS = [
   { label: 'New Leads (7d)', value: '18', delta: '+6', up: true },
 ];
 
-export default function DashboardHome({ user, setActiveView, taskCount }) {
+export default function DashboardHome({ user, setActiveView, taskCount, isMobile }) {
   const [completedTasks, setCompletedTasks] = useState([]);
 
   const completeTask = (id) => {
@@ -52,7 +52,7 @@ export default function DashboardHome({ user, setActiveView, taskCount }) {
 
       {/* Stats row */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px',
+        display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: '16px',
         marginBottom: '32px',
       }}>
         {STATS.map((stat, i) => (
@@ -86,7 +86,7 @@ export default function DashboardHome({ user, setActiveView, taskCount }) {
       </div>
 
       {/* Main grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px', gap: '24px' }}>
 
         {/* Transactions */}
         <div>

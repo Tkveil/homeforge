@@ -10,7 +10,7 @@ const INITIAL_TASKS = [
   { id: 7, title: 'Commission disbursement — 3 closes', due: '2026-10-18', priority: 'low', type: 'form', transaction: 'Multiple', assignee: 'Tommy Kunkel', completed: false },
 ];
 
-export default function TasksView({ user }) {
+export default function TasksView({ user, isMobile }) {
   const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [showAdd, setShowAdd] = useState(false);
   const [newTask, setNewTask] = useState({ title: '', due: '', priority: 'medium', type: 'doc' });
@@ -93,7 +93,7 @@ export default function TasksView({ user }) {
           borderRadius: '12px', padding: '24px', marginBottom: '20px',
         }}>
           <h3 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '18px', color: '#f0ede8', marginBottom: '16px' }}>New Task</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto auto', gap: '12px', alignItems: 'end' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr auto auto auto', gap: '12px', alignItems: 'end' }}>
             <div>
               <label style={{ display: 'block', fontSize: '11px', color: '#4a4845', fontFamily: 'DM Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>Task</label>
               <input

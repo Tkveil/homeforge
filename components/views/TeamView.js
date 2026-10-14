@@ -7,7 +7,7 @@ const TEAM = [
   { id: 4, name: 'Chris Vega', role: 'mlo', avatar: 'CV', email: 'chris@firstnational.com', phone: '(512) 555-0004', transactions: 10, closedMTD: 3, status: 'active' },
 ];
 
-export default function TeamView({ user }) {
+export default function TeamView({ user, isMobile }) {
   if (!can(user.role, 'VIEW_TEAM')) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh' }}>
@@ -71,7 +71,7 @@ export default function TeamView({ user }) {
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                 <div style={{ background: '#141414', borderRadius: '8px', padding: '12px' }}>
                   <div style={{ fontSize: '10px', color: '#4a4845', fontFamily: 'DM Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>Active</div>
                   <div style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '24px', color: '#f0ede8' }}>{member.transactions}</div>

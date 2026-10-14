@@ -49,7 +49,7 @@ const TRANSACTIONS = [
   },
 ];
 
-export default function TransactionsView({ user }) {
+export default function TransactionsView({ user, isMobile }) {
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
@@ -101,7 +101,7 @@ export default function TransactionsView({ user }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: tx ? '1fr 400px' : '1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : (tx ? '1fr 400px' : '1fr'), gap: '20px' }}>
         {/* List */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {filtered.map(t => (

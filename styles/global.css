@@ -121,3 +121,14 @@ body::before {
 .status-dot.pending { background: var(--accent-gold); }
 .status-dot.closed { background: var(--text-muted); }
 .status-dot.urgent { background: var(--accent-red); }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  html { font-size: 15px; }
+  /* Prevent accidental horizontal scroll from wide content */
+  body { overflow-x: hidden; }
+  /* Comfortable touch targets */
+  button { min-height: 40px; }
+  /* Keep long words/addresses from breaking layout */
+  * { overflow-wrap: break-word; }
+}

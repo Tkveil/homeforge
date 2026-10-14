@@ -9,7 +9,7 @@ const LOANS = [
 
 const STAGES = ['Application', 'Processing', 'Underwriting', 'Conditional Approval', 'Clear to Close', 'Closed'];
 
-export default function PipelineView({ user }) {
+export default function PipelineView({ user, isMobile }) {
   if (!can(user.role, 'VIEW_LOAN_PIPELINE')) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '50vh' }}>
@@ -35,8 +35,9 @@ export default function PipelineView({ user }) {
       {/* Kanban-style stage header */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: `repeat(${STAGES.length}, 1fr)`,
+        gridTemplateColumns: `repeat(${STAGES.length}, ${isMobile ? '200px' : '1fr'})`,
         gap: '8px', marginBottom: '24px',
+        ...(isMobile ? { overflowX: 'auto', paddingBottom: '8px' } : {}),
       }}>
         {STAGES.map(stage => {
           const count = LOANS.filter(l => l.stage === stage).length;
@@ -84,7 +85,7 @@ export default function PipelineView({ user }) {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px', marginBottom: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: '12px', marginBottom: '16px' }}>
               {[
                 { label: 'Type', value: loan.type },
                 { label: 'Rate', value: loan.rate },

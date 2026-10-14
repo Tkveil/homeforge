@@ -11,7 +11,7 @@ const VIEW_LABELS = {
   team: 'Team',
 };
 
-export default function TopBar({ user, activeView, taskCount, onMenuToggle, setActiveView }) {
+export default function TopBar({ user, activeView, taskCount, onMenuToggle, setActiveView, isMobile }) {
   const [searchValue, setSearchValue] = useState('');
 
   return (
@@ -20,7 +20,7 @@ export default function TopBar({ user, activeView, taskCount, onMenuToggle, setA
       background: '#0a0a0a',
       borderBottom: '1px solid #141414',
       display: 'flex', alignItems: 'center',
-      padding: '0 24px', gap: '16px',
+      padding: isMobile ? '0 12px' : '0 24px', gap: isMobile ? '10px' : '16px',
       flexShrink: 0,
     }}>
       {/* Menu toggle */}
@@ -44,7 +44,8 @@ export default function TopBar({ user, activeView, taskCount, onMenuToggle, setA
         {VIEW_LABELS[activeView] || 'Dashboard'}
       </div>
 
-      {/* Search */}
+      {/* Search — hidden on phones to save room */}
+      {!isMobile && (
       <div style={{ flex: 1, maxWidth: '400px', marginLeft: 'auto' }}>
         <div style={{ position: 'relative' }}>
           <span style={{
@@ -66,9 +67,10 @@ export default function TopBar({ user, activeView, taskCount, onMenuToggle, setA
           />
         </div>
       </div>
+      )}
 
       {/* Quick actions */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginLeft: isMobile ? 'auto' : undefined }}>
         {/* Tasks button with red badge */}
         <button
           onClick={() => setActiveView('tasks')}

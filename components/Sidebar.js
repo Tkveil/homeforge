@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { id: 'team', icon: '◉', label: 'Team', roles: ['admin', 'broker', 'tc'] },
 ];
 
-export default function Sidebar({ user, activeView, setActiveView, taskCount, open, onLogout }) {
+export default function Sidebar({ user, activeView, setActiveView, taskCount, open, onLogout, isMobile, onClose }) {
   const roleColor = getRoleBadgeColor(user.role);
 
   const visibleNav = NAV_ITEMS.filter(item => {
@@ -21,14 +21,23 @@ export default function Sidebar({ user, activeView, setActiveView, taskCount, op
 
   return (
     <div style={{
-      width: open ? '240px' : '0',
-      minWidth: open ? '240px' : '0',
+      width: '240px',
+      minWidth: '240px',
       overflow: 'hidden',
       height: '100vh',
       background: '#0a0a0a',
       borderRight: '1px solid #141414',
       display: 'flex', flexDirection: 'column',
-      transition: 'min-width 0.3s, width 0.3s',
+      transition: 'transform 0.3s ease, min-width 0.3s, width 0.3s',
+      // Mobile: fixed drawer that slides in/out above content
+      ...(isMobile ? {
+        position: 'fixed', left: 0, top: 0, zIndex: 1000,
+        transform: open ? 'translateX(0)' : 'translateX(-100%)',
+        boxShadow: open ? '8px 0 32px rgba(0,0,0,0.6)' : 'none',
+      } : {
+        minWidth: open ? '240px' : '0',
+        width: open ? '240px' : '0',
+      }),
     }}>
       {/* Logo */}
       <div style={{
