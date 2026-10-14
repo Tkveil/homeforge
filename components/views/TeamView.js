@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { can, getRoleBadgeColor, getRoleLabel } from '../../lib/roles';
+import { useBilling, openPortal } from '../../lib/billing';
 
 export default function TeamView({ user }) {
   const [team, setTeam] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { billing } = useBilling(user?.id);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -34,12 +37,76 @@ export default function TeamView({ user }) {
         <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '28px', fontWeight: '400', color: '#f0ede8' }}>
           Team
         </h1>
-        {can(user.role, 'MANAGE_TEAM') && (
-          <div style={{ fontSize: '12px', color: '#4a4845', fontFamily: 'DM Mono, monospace' }}>
-            New members join by creating an account on the sign-in page
-          </div>
+        {billing?.isOwner && (
+          <button
+            onClick={async () => {
+              setPortalLoading(true);
+              try {
+                await openPortal(user.id);
+              } catch (e) {
+                setPortalLoading(false);
+              }
+            }}
+            disabled={portalLoading}
+            style={{
+              padding: '10px 20px',
+              background: '#1a1a1a',
+              border: '1px solid #242424',
+              borderRadius: '8px',
+              color: '#f0ede8', fontSize: '13px', fontWeight: '600',
+              cursor: portalLoading ? 'not-allowed' : 'pointer',
+            }}
+          >
+            {portalLoading ? 'Opening…' : 'Manage subscription'}
+          </button>
         )}
       </div>
+
+      {/* Team plan card */}
+      {billing?.team && (
+        <div style={{
+          background: '#0f0f0f', border: '1px solid #c9a84c44',
+          borderRadius: '12px', padding: '20px 24px', marginBottom: '20px',
+          display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap',
+        }}>
+          <div>
+            <div style={{ fontSize: '11px', color: '#4a4845', fontFamily: 'DM Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+              Team
+            </div>
+            <div style={{ fontSize: '16px', color: '#f0ede8', fontWeight: '500' }}>{billing.team.name}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '11px', color: '#4a4845', fontFamily: 'DM Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+              Seats
+            </div>
+            <div style={{ fontSize: '16px', color: '#f0ede8', fontFamily: 'DM Mono, monospace' }}>
+              {billing.team.seatsUsed} / {billing.team.seatLimit}
+            </div>
+          </div>
+          {billing.isOwner && (
+            <div>
+              <div style={{ fontSize: '11px', color: '#4a4845', fontFamily: 'DM Mono, monospace', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '4px' }}>
+                Invite code
+              </div>
+              <div style={{
+                fontSize: '16px', color: '#c9a84c', fontFamily: 'DM Mono, monospace',
+                border: '1px dashed #c9a84c44', borderRadius: '8px', padding: '4px 12px',
+                cursor: 'pointer',
+              }}
+              onClick={() => navigator.clipboard?.writeText(billing.team.joinCode)}
+              title="Click to copy"
+              >
+                {billing.team.joinCode}
+              </div>
+            </div>
+          )}
+          <div style={{ marginLeft: 'auto', fontSize: '12px', color: '#4a4845', fontFamily: 'DM Mono, monospace' }}>
+            {billing.isOwner
+              ? 'Share the invite code — new members join free under your plan.'
+              : 'You\u2019re covered by your team\u2019s plan.'}
+          </div>
+        </div>
+      )}
 
       {loading ? (
         <div style={{ color: '#4a4845', fontFamily: 'DM Mono, monospace', fontSize: '13px', padding: '40px 0', textAlign: 'center' }}>

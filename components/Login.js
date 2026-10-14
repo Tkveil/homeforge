@@ -29,6 +29,7 @@ export default function Login() {
   const [name, setName] = useState('');
   const [brokerage, setBrokerage] = useState('');
   const [role, setRole] = useState('agent');
+  const [teamCode, setTeamCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -48,6 +49,7 @@ export default function Login() {
           name: name.trim(),
           brokerage: brokerage.trim(),
           role,
+          teamCode: teamCode.trim(),
         });
         if (needsConfirmation) {
           setNotice(
@@ -220,6 +222,22 @@ export default function Login() {
                 style={inputStyle}
               />
             </div>
+
+            {mode === 'signup' && (
+              <div style={{ marginBottom: '24px' }}>
+                <label style={labelStyle}>Team code (optional)</label>
+                <input
+                  type="text"
+                  value={teamCode}
+                  onChange={(e) => setTeamCode(e.target.value.toUpperCase())}
+                  placeholder="FORGE-XXXX — if your team invited you"
+                  style={{ ...inputStyle, fontFamily: 'DM Mono, monospace' }}
+                />
+                <p style={{ color: '#4a4845', fontSize: '11px', marginTop: '6px' }}>
+                  Joining a team? Enter their code and you&apos;re covered by their plan.
+                </p>
+              </div>
+            )}
 
             {error && (
               <div

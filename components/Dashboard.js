@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
+import Paywall from './Paywall';
 import useIsMobile from '../lib/useIsMobile';
 import { supabase } from '../lib/supabase';
+import { useBilling } from '../lib/billing';
 import DashboardHome from './views/DashboardHome';
 import TransactionsView from './views/TransactionsView';
 import ContactsView from './views/ContactsView';
@@ -21,6 +23,9 @@ export default function Dashboard({ user, onLogout }) {
   useEffect(() => {
     setSidebarOpen(!isMobile);
   }, [isMobile]);
+
+  // Billing gate — no active team subscription, no app
+  const { billing, loading: billingLoading, refresh: refreshBilling } = useBilling(user?.id);
 
   // Live open-task count for the red badge
   const [taskCount, setTaskCount] = useState(0);
@@ -46,6 +51,36 @@ export default function Dashboard({ user, onLogout }) {
     team: <TeamView user={user} isMobile={isMobile} />,
     idx: <IDXView user={user} isMobile={isMobile} />,
   };
+
+  // Refresh billing status when returning from Stripe checkout
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('billing') === 'success') {
+      // Give the webhook a moment, then re-check
+      const t1 = setTimeout(refreshBilling, 3000);
+      const t2 = setTimeout(refreshBilling, 9000);
+      window.history.replaceState({}, '', window.location.pathname);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+    if (params.get('billing') === 'cancelled') {
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, [refreshBilling]);
+
+  if (billingLoading) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#080808', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: '#4a4845', fontSize: '13px', fontFamily: 'DM Mono, monospace' }}>
+          Checking subscription…
+        </div>
+      </div>
+    );
+  }
+
+  if (!billing?.hasAccess) {
+    return <Paywall user={user} onSubscribed={refreshBilling} />;
+  }
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#080808' }}>
