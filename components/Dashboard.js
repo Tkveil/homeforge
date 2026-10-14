@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import useIsMobile from '../lib/useIsMobile';
+import { supabase } from '../lib/supabase';
 import DashboardHome from './views/DashboardHome';
 import TransactionsView from './views/TransactionsView';
 import ContactsView from './views/ContactsView';
@@ -21,8 +22,19 @@ export default function Dashboard({ user, onLogout }) {
     setSidebarOpen(!isMobile);
   }, [isMobile]);
 
-  // Mock task count for the red badge — in production comes from Supabase
-  const taskCount = 7;
+  // Live open-task count for the red badge
+  const [taskCount, setTaskCount] = useState(0);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { count } = await supabase
+        .from('tasks')
+        .select('id', { count: 'exact', head: true })
+        .eq('completed', false);
+      if (!cancelled) setTaskCount(count || 0);
+    })();
+    return () => { cancelled = true; };
+  }, []);
 
   const views = {
     home: <DashboardHome user={user} setActiveView={setActiveView} taskCount={taskCount} isMobile={isMobile} />,
