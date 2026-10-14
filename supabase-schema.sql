@@ -3,7 +3,7 @@
 
 -- ── Tables ──
 
-CREATE TABLE profiles (
+CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   role TEXT NOT NULL DEFAULT 'agent' CHECK (role IN ('agent','tc','mlo','admin','broker')),
   name TEXT,
@@ -12,7 +12,7 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE contacts (
+CREATE TABLE IF NOT EXISTS contacts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   agent_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE contacts (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   agent_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   address TEXT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE transactions (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE tasks (
+CREATE TABLE IF NOT EXISTS tasks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   agent_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   transaction_id UUID REFERENCES transactions(id) ON DELETE SET NULL,
@@ -50,7 +50,7 @@ CREATE TABLE tasks (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE messages (
+CREATE TABLE IF NOT EXISTS messages (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   transaction_id UUID REFERENCES transactions(id) ON DELETE CASCADE,
   from_name TEXT NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE messages (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE loans (
+CREATE TABLE IF NOT EXISTS loans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   transaction_id UUID REFERENCES transactions(id) ON DELETE SET NULL,
   borrower TEXT NOT NULL,
