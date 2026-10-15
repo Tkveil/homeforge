@@ -51,6 +51,21 @@ export default function Home() {
     <>
       <Head>
         <title>HomeForge — Real Estate Operations Platform</title>
+        <meta name="description" content="The all-in-one CRM for real estate teams. Agent, lender, and TC in one workflow. $49/mo for the whole team." />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="HomeForge" />
+        <meta property="og:title" content="HomeForge — Everything a team uses. Nothing it doesn't." />
+        <meta property="og:description" content="The all-in-one CRM for real estate teams. Agent, lender, and TC in one workflow. $49/mo for the whole team." />
+        <meta property="og:url" content="https://homeforge.live/" />
+        <meta property="og:image" content="https://homeforge.live/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="HomeForge — Everything a team uses. Nothing it doesn't." />
+        <meta name="twitter:description" content="The all-in-one CRM for real estate teams. Agent, lender, and TC in one workflow. $49/mo for the whole team." />
+        <meta name="twitter:image" content="https://homeforge.live/og-image.png" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
       <AuthProvider>
         <Shell />
