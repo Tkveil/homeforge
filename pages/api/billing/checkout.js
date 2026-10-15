@@ -59,6 +59,7 @@ export default async function handler(req, res) {
       cancel_url: `${APP_URL}/?billing=cancelled`,
       metadata: { user_id: userId },
       subscription_data: { metadata: { user_id: userId } },
+      allow_promotion_codes: true,
     });
 
     return res.status(200).json({ url: session.url });
